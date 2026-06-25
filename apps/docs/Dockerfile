@@ -45,4 +45,4 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/we
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "apps/docs/server.js"]
