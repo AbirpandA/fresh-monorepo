@@ -9,7 +9,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN npm install -g turbo
 COPY . .
-# CHANGED: 'web' to 'docs'
+
 RUN turbo prune docs --docker
 
 # ---------------------------------------------------------
@@ -28,7 +28,7 @@ RUN pnpm install
 
 # Build the project
 COPY --from=builder /app/out/full/ .
-# CHANGED: 'web' to 'docs'
+
 RUN pnpm turbo run build --filter=docs...
 
 # ---------------------------------------------------------
@@ -41,13 +41,13 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# CHANGED: All paths from 'web' to 'docs'
+
 COPY --from=installer /app/apps/docs/public ./public
 COPY --from=installer --chown=nextjs:nodejs /app/apps/docs/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/docs/.next/static ./apps/docs/.next/static
 
 USER nextjs
-# CHANGED: Port 3000 to 3001
+
 EXPOSE 3001
 ENV PORT=3001
 CMD ["node", "apps/docs/server.js"]

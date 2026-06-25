@@ -88,6 +88,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set lowercase repository name
+        if: steps.filter.outputs.changed == 'true'
+        run: |
+          echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+
       - name: Build and Push
         if: steps.filter.outputs.changed == 'true'
         uses: docker/build-push-action@v6
@@ -95,6 +100,7 @@ jobs:
           context: .
           file: apps/${{ matrix.app }}/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.app }}:latest
+          # Use the new lowercase environment variable here!
+          tags: ${{ env.REGISTRY }}/${{ env.REPO_LC }}-${{ matrix.app }}:latest 
           cache-from: type=gha
           cache-to: type=gha,mode=max
